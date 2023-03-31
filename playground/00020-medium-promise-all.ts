@@ -23,10 +23,14 @@
 
 /* _____________ Your Code Here _____________ */
 
-declare function PromiseAll(values: any): any
+declare function PromiseAll<T extends any[]>(
+  values: readonly [...T],
+): Promise<{
+  [key in keyof T]: Awaited<T[key]>
+}>
 
 /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 const promiseAllTest1 = PromiseAll([1, 2, 3] as const)
 const promiseAllTest2 = PromiseAll([1, 2, Promise.resolve(3)] as const)

@@ -39,32 +39,35 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Chainable = {
-  option(key: string, value: any): any
-  get(): any
+type Chainable<R = {}> = {
+  option<K extends PropertyKey, V extends any>(
+    key: K extends keyof R ? never : K,
+    value: V,
+  ): Chainable<Omit<R, K> & Record<K, V>>
+  get(): R
 }
 
 /* _____________ Test Cases _____________ */
-import type { Alike, Expect } from '@type-challenges/utils'
+import type { Alike, Expect } from "@type-challenges/utils"
 
 declare const a: Chainable
 
 const result1 = a
-  .option('foo', 123)
-  .option('bar', { value: 'Hello World' })
-  .option('name', 'type-challenges')
+  .option("foo", 123)
+  .option("bar", { value: "Hello World" })
+  .option("name", "type-challenges")
   .get()
 
 const result2 = a
-  .option('name', 'another name')
+  .option("name", "another name")
   // @ts-expect-error
-  .option('name', 'last name')
+  .option("name", "last name")
   .get()
 
 const result3 = a
-  .option('name', 'another name')
+  .option("name", "another name")
   // @ts-expect-error
-  .option('name', 123)
+  .option("name", 123)
   .get()
 
 type cases = [
