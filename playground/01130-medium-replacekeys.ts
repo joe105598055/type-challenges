@@ -43,55 +43,57 @@
 
 /* _____________ Your Code Here _____________ */
 
-type ReplaceKeys<U, T, Y> = any
+type ReplaceKeys<U extends object, T extends string, Y extends object> = {
+  [K in keyof U]: K extends T ? (K extends keyof Y ? Y[K] : never) : U[K]
+}
 
 /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 type NodeA = {
-  type: 'A'
+  type: "A"
   name: string
   flag: number
 }
 
 type NodeB = {
-  type: 'B'
+  type: "B"
   id: number
   flag: number
 }
 
 type NodeC = {
-  type: 'C'
+  type: "C"
   name: string
   flag: number
 }
 
 type ReplacedNodeA = {
-  type: 'A'
+  type: "A"
   name: number
   flag: string
 }
 
 type ReplacedNodeB = {
-  type: 'B'
+  type: "B"
   id: number
   flag: string
 }
 
 type ReplacedNodeC = {
-  type: 'C'
+  type: "C"
   name: number
   flag: string
 }
 
 type NoNameNodeA = {
-  type: 'A'
+  type: "A"
   flag: number
   name: never
 }
 
 type NoNameNodeC = {
-  type: 'C'
+  type: "C"
   flag: number
   name: never
 }
@@ -101,8 +103,13 @@ type ReplacedNodes = ReplacedNodeA | ReplacedNodeB | ReplacedNodeC
 type NodesNoName = NoNameNodeA | NoNameNodeC | NodeB
 
 type cases = [
-  Expect<Equal<ReplaceKeys<Nodes, 'name' | 'flag', { name: number; flag: string }>, ReplacedNodes>>,
-  Expect<Equal<ReplaceKeys<Nodes, 'name', { aa: number }>, NodesNoName>>,
+  Expect<
+    Equal<
+      ReplaceKeys<Nodes, "name" | "flag", { name: number; flag: string }>,
+      ReplacedNodes
+    >
+  >,
+  Expect<Equal<ReplaceKeys<Nodes, "name", { aa: number }>, NodesNoName>>,
 ]
 
 /* _____________ Further Steps _____________ */

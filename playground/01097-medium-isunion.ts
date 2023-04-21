@@ -20,16 +20,22 @@
 
 /* _____________ Your Code Here _____________ */
 
-type IsUnion<T> = any
+type IsUnion<T, B = T> = [T] extends [never]
+  ? false
+  : T extends T
+  ? [Exclude<B, T>] extends [never]
+    ? false
+    : true
+  : never
 
 /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 type cases = [
   Expect<Equal<IsUnion<string>, false>>,
   Expect<Equal<IsUnion<string | number>, true>>,
-  Expect<Equal<IsUnion<'a' | 'b' | 'c' | 'd'>, true>>,
-  Expect<Equal<IsUnion<undefined | null | void | ''>, true>>,
+  Expect<Equal<IsUnion<"a" | "b" | "c" | "d">, true>>,
+  Expect<Equal<IsUnion<undefined | null | void | "">, true>>,
   Expect<Equal<IsUnion<{ a: string } | { a: number }>, true>>,
   Expect<Equal<IsUnion<{ a: string | number }>, false>>,
   Expect<Equal<IsUnion<[string | number]>, false>>,
@@ -37,7 +43,7 @@ type cases = [
   Expect<Equal<IsUnion<string | never>, false>>,
   Expect<Equal<IsUnion<string | unknown>, false>>,
   Expect<Equal<IsUnion<string | any>, false>>,
-  Expect<Equal<IsUnion<string | 'a'>, false>>,
+  Expect<Equal<IsUnion<string | "a">, false>>,
   Expect<Equal<IsUnion<never>, false>>,
 ]
 
@@ -47,3 +53,7 @@ type cases = [
   > View solutions: https://tsch.js.org/1097/solutions
   > More Challenges: https://tsch.js.org
 */
+
+type Test<T> = T extends T ? ([T] extends ["d"] ? true : 0) : 0
+
+let t: Test<"a" | "b" | "c">

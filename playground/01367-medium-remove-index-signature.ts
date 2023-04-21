@@ -25,7 +25,15 @@
 
 /* _____________ Your Code Here _____________ */
 
-type RemoveIndexSignature<T> = any
+type RemoveIndexSignature<T> = {
+  [k in keyof T as string extends k
+    ? never
+    : number extends k
+    ? never
+    : symbol extends k
+    ? never
+    : k]: T[k]
+}
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
@@ -34,7 +42,6 @@ type Foo = {
   [key: string]: any
   foo(): void
 }
-
 type Bar = {
   [key: number]: any
   bar(): void
