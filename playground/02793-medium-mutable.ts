@@ -25,10 +25,12 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Mutable<T> = any
+type Mutable<T extends object> = {
+  -readonly [K in keyof T]: T[K]
+}
 
 /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 interface Todo1 {
   title: string
@@ -48,7 +50,7 @@ type cases = [
 
 type errors = [
   // @ts-expect-error
-  Mutable<'string'>,
+  Mutable<"string">,
   // @ts-expect-error
   Mutable<0>,
 ]
