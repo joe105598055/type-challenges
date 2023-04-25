@@ -25,10 +25,21 @@
 
 /* _____________ Your Code Here _____________ */
 
-type GreaterThan<T extends number, U extends number> = any
+type newArr<T extends number, A extends any[] = []> = [T] extends [A["length"]]
+  ? A
+  : newArr<T, [...A, ""]>
+
+type GreaterArr<T extends any[], U extends any[]> = U extends [...T, ...any]
+  ? false
+  : true
+
+type GreaterThan<T extends number, U extends number> = GreaterArr<
+  newArr<T>,
+  newArr<U>
+>
 
 /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 type cases = [
   Expect<Equal<GreaterThan<1, 0>, true>>,

@@ -19,22 +19,27 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Reverse<T> = any
+type Reverse<T extends string[]> = T extends [
+  infer L,
+  ...infer R extends string[],
+]
+  ? [...Reverse<R>, L]
+  : []
 
 /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 type cases = [
   Expect<Equal<Reverse<[]>, []>>,
-  Expect<Equal<Reverse<['a', 'b']>, ['b', 'a']>>,
-  Expect<Equal<Reverse<['a', 'b', 'c']>, ['c', 'b', 'a']>>,
+  Expect<Equal<Reverse<["a", "b"]>, ["b", "a"]>>,
+  Expect<Equal<Reverse<["a", "b", "c"]>, ["c", "b", "a"]>>,
 ]
 
 type errors = [
   // @ts-expect-error
-  Reverse<'string'>,
+  Reverse<"string">,
   // @ts-expect-error
-  Reverse<{ key: 'value' }>,
+  Reverse<{ key: "value" }>,
 ]
 
 /* _____________ Further Steps _____________ */
