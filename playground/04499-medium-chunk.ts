@@ -18,18 +18,22 @@
 */
 
 /* _____________ Your Code Here _____________ */
+// your answers
+type FixLengthTuple<
+  N extends number,
+  A extends any[] = [],
+> = A["length"] extends N ? A : FixLengthTuple<N, [...A, any]>
 
-// type Chunk<
-//   T extends unknown[],
-//   N extends number,
-//   Swap extends any[] = [],
-// > = Swap["length"] extends N
-//   ? [Swap, ...Chunk<T, N>]
-//   : T extends [infer K, ...infer L]
-//   ? Chunk<L, N, [...Swap, K]>
-//   : Swap extends []
-//   ? Swap
-//   : [Swap]
+type Chunk<T extends any[], U extends number> = T extends [
+  ...FixLengthTuple<U>,
+  ...infer Rest,
+] // 这样子 Rest 就空出了前面 U 个 Element
+  ? T extends [...infer R, ...Rest] // R 就是前 U 个 Element 组成的 Array
+    ? [R, ...Chunk<Rest, U>]
+    : []
+  : T extends []
+  ? []
+  : [T]
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from "@type-challenges/utils"

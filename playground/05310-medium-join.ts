@@ -19,16 +19,23 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Join<T, U> = any
+type Join<T extends string[], U extends string | number> = T extends [
+  infer S extends string,
+  ...infer R extends string[],
+]
+  ? R extends []
+    ? S // 只有一個元素，直接返回該字元
+    : `${S}${U}${Join<R, U>}`
+  : never
 
 /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
 
 type cases = [
-  Expect<Equal<Join<['a', 'p', 'p', 'l', 'e'], '-'>, 'a-p-p-l-e'>>,
-  Expect<Equal<Join<['Hello', 'World'], ' '>, 'Hello World'>>,
-  Expect<Equal<Join<['2', '2', '2'], 1>, '21212'>>,
-  Expect<Equal<Join<['o'], 'u'>, 'o'>>,
+  Expect<Equal<Join<["a", "p", "p", "l", "e"], "-">, "a-p-p-l-e">>,
+  Expect<Equal<Join<["Hello", "World"], " ">, "Hello World">>,
+  Expect<Equal<Join<["2", "2", "2"], 1>, "21212">>,
+  Expect<Equal<Join<["o"], "u">, "o">>,
 ]
 
 /* _____________ Further Steps _____________ */

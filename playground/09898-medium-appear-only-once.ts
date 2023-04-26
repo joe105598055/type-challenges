@@ -12,11 +12,18 @@
 
 /* _____________ Your Code Here _____________ */
 
-type FindEles<T extends any[]> = any
+type FindEles<T extends number[], R extends any[] = [], U = never> = T extends [
+  infer F,
+  ...infer REST extends number[],
+]
+  ? F extends U | REST[number] // 是否存在重複
+    ? FindEles<REST, R, F>
+    : FindEles<REST, [...R, F], F>
+  : R
 
 /* _____________ Test Cases _____________ */
-import type { Equal, Expect } from '@type-challenges/utils'
-import { ExpectFalse, NotEqual } from '@type-challenges/utils'
+import type { Equal, Expect } from "@type-challenges/utils"
+import { ExpectFalse, NotEqual } from "@type-challenges/utils"
 
 type cases = [
   Expect<Equal<FindEles<[1, 2, 2, 3, 3, 4, 5, 6, 6, 6]>, [1, 4, 5]>>,
